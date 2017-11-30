@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Configuration status="warn"
+               strict="true"
+               name="XMLConfigTest">
+
+    <Appenders>
+
+        <Appender type="Console" name="STDOUT">
+            <Layout type="PatternLayout">
+                <Pattern>[%d{ISO8601}] [%4p] [%t] %c{16}:%L: %m%n</Pattern>
+                <!--<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>-->
+            </Layout>
+        </Appender>
+
+        <RollingFile name="RFILE"
+                     fileName="./logs/anymessenger.log"
+                     filePattern="./logs/anymessenger.%d{yyyy-MM-dd-HH}-%i.log"
+                     append="true">
+            <!--append="false"-->
+            <PatternLayout>
+                <Pattern>[%d{ISO8601}] [%4p] [%t] %c{16}:%L: %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="2 MB"/>
+            </Policies>
+            <!--<DefaultRolloverStrategy max="20"/>-->
+        </RollingFile>
+
+    </Appenders>
+
+    <Loggers>
+        <Logger name="com.anymessenger"
+                level="INFO"
+                additivity="false">
+            <AppenderRef ref="STDOUT"/>
+            <AppenderRef ref="RFILE"/>
+        </Logger>
+
+        <Logger name="com.zaxxer.hikari"
+                level="DEBUG"
+                additivity="false">
+            <AppenderRef ref="STDOUT"/>
+            <AppenderRef ref="RFILE"/>
+        </Logger>
+
+        <Root level="INFO">
+            <AppenderRef ref="STDOUT"/>
+            <AppenderRef ref="RFILE"/>
+        </Root>
+    </Loggers>
+
+</Configuration>
