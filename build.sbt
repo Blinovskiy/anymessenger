@@ -4,9 +4,7 @@ import sbt.Keys._
 
 scalaVersion in ThisBuild := "2.12.4"
 
-/*
-* anymessenger
-* */
+
 lazy val `core` = (project in file("core"))
   .dependsOn(`db-api`)
   .settings(build(commonDeps ++ jdbcDeps ++ testDeps): _*) //akkaHttpDeps ++ akkaDeps ++
@@ -25,26 +23,22 @@ lazy val `db-api` = (project in file("db-api"))
   .dependsOn(`common`)
   .settings(build(commonDeps ++ jdbcDeps): _*)
 
-/*
- * Dev & Test tools
- */
 lazy val `devTools` = (project in file("devTools"))
   .dependsOn(`common`)
   .settings(build(Seq("com.typesafe.slick" %% "slick-codegen" % "3.2.0") ++ commonDeps ++ jdbcDeps): _*)
 
 
+// todo: use plugin for frontend building
 val buildFrontend = taskKey[Unit]("Execute frontend scripts")
-
 buildFrontend := {
   import scala.language.postfixOps
   import scala.sys.process._
-
 
   val s: TaskStreams = streams.value
   val shell: Seq[String] = Seq("bash", "-c")
   val npmInstall: Seq[String] = shell :+ "cd js-ui && npm install"
   val npmBuild: Seq[String] = shell :+ "cd js-ui && npm run build"
-  val copyBundle: Seq[String] = shell :+ "mkdir -p ./core/target/scala-2.12/classes/cash-report && cp -rf ./js-ui/dist/* ./core/target/scala-2.12/classes/cash-report"
+  val copyBundle: Seq[String] = shell :+ "mkdir -p ./core/target/scala-2.12/classes/jsui && cp -rf ./js-ui/dist/* ./core/target/scala-2.12/classes/jsui"
   s.log.info("Frontend build has been started...")
 
   val packageTask: ProcessBuilder =
@@ -59,12 +53,11 @@ buildFrontend := {
   }
 }
 
-/*
-*  Build and Package Commands
-* */
+
+
+addCommandAlias("m", "; clean; core/assembly")
 addCommandAlias("p", "; clean; core/assembly")
 //addCommandAlias("pf", "; clean; buildFrontend; core/assembly")
-
 addCommandAlias("c", "; compile")
 addCommandAlias("cc", ";clean ;compile")
 addCommandAlias("cuc", ";clean ;update ;compile")

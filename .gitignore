@@ -32,6 +32,11 @@ src_managed/
 *logs/*.log
 logs/*
 
+#configs
+**/resources/*.conf
+**/resources/mail.properties
+**/resources/bak*
+
 #NODE
 assets/
 node_modules/

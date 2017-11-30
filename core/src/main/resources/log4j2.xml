@@ -2,7 +2,7 @@
 
 <Configuration status="warn"
                strict="true"
-               name="XMLConfigTest">
+               name="anymessengerLog4jXMLConfig">
 
     <Appenders>
 
@@ -17,7 +17,6 @@
                      fileName="./logs/anymessenger.log"
                      filePattern="./logs/anymessenger.%d{yyyy-MM-dd-HH}-%i.log"
                      append="true">
-            <!--append="false"-->
             <PatternLayout>
                 <Pattern>[%d{ISO8601}] [%4p] [%t] %c{16}:%L: %m%n</Pattern>
             </PatternLayout>

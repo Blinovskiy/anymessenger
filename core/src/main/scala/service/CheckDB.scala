@@ -16,9 +16,21 @@ object CheckDB
   import Logic._
 
   private val logger: Logger = LoggerFactory.getLogger(Logic.getClass)
+  //  override def schema = Some("ANY_DEV")
+
+  //  implicit val any2str: Any => String = a => a.toString
+  //  implicit def any2str(a: Any): String = a.toString
+  //  logger.info(any2str(config.config))
+
 
   test()
 
   val user2 = Await.result(getUser(2), 5 second)
   logger.info(user2.toString)
+
+  logger.error("error")
+  logger.warn("warn")
+  logger.info("info")
+  logger.debug("debug")
+  logger.trace("trace")
 }

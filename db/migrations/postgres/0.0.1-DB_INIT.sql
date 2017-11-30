@@ -1,15 +1,3 @@
--- id: Long,
--- firstName: Option[String],
--- lastName: Option[String],
--- login: String,
--- email: String,
--- gender: Option[Long],
--- description: Option[String],
--- isActive: Boolean = true,
--- createdAt: Option[Date],
--- updatedAt: Option[Date],
--- deletedAt: Option[Date],
--- isDeleted: Boolean = false
 create table "user" (
   id          serial,
   firstname   varchar(32),
@@ -24,13 +12,6 @@ create table "user" (
   deletedat   timestamp(6),
   isdeleted   boolean default false    not null
 );
-
--- id: long,
--- text: option[string],
--- userid: option[long],
--- createdat: option[date],
--- updatedat: option[date],
--- isdeleted: boolean = false
 
 create table "message" (
   id        serial                not null,
