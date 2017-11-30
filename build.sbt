@@ -9,7 +9,7 @@ scalaVersion in ThisBuild := "2.12.4"
 * */
 lazy val `core` = (project in file("core"))
   .dependsOn(`db-api`)
-  .settings(build(commonDeps ++ akkaHttpDeps ++ akkaDeps ++ jdbcDeps ++ testDeps): _*)
+  .settings(build(commonDeps ++ jdbcDeps ++ testDeps): _*) //akkaHttpDeps ++ akkaDeps ++
   .settings(
     name := "anymessenger",
     organization := "com.anymessenger",
@@ -19,7 +19,7 @@ lazy val `core` = (project in file("core"))
   )
 
 lazy val `common` = (project in file("common"))
-  .settings(build(commonDeps ++ akkaDeps ++ akkaHttpDeps ++ jdbcDeps ++ testDeps): _*)
+  .settings(build(commonDeps ++ jdbcDeps ++ testDeps): _*) //akkaDeps ++ akkaHttpDeps ++
 
 lazy val `db-api` = (project in file("db-api"))
   .dependsOn(`common`)
