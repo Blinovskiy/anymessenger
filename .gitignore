@@ -33,7 +33,7 @@ src_managed/
 logs/*
 
 #configs
-**/resources/*.conf
+#**/resources/*.conf
 **/resources/mail.properties
 **/resources/bak*
 

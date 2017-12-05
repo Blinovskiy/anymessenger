@@ -7,12 +7,12 @@ scalaVersion in ThisBuild := "2.12.4"
 
 lazy val `core` = (project in file("core"))
   .dependsOn(`db-api`)
-  .settings(build(commonDeps ++ jdbcDeps ++ testDeps): _*) //akkaHttpDeps ++ akkaDeps ++
+  .settings(build(commonDeps ++ http4sDeps ++ finagleDeps ++ jdbcDeps ++ testDeps): _*) //akkaHttpDeps ++ akkaDeps ++
   .settings(
     name := "anymessenger",
     organization := "com.anymessenger",
     version := "0.1",
-    mainClass in assembly := Some("com.anymessenger.Main"),
+    mainClass in assembly := Some("service.MainService"),
     assemblyJarName in assembly := s"anymessenger-${version.value}.jar"
   )
 
