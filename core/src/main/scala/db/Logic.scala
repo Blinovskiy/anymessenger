@@ -46,8 +46,7 @@ object Logic
       }
 
 
-  def getUserMessages(userId: Long)(implicit executor: ExecutionContext): Future[Either[String, List[MessageRow]]] = {
-    logger.info("get messages...")
+  def getUserMessages(userId: Long)(implicit executor: ExecutionContext): Future[Either[String, List[MessageRow]]] =
     logTime(s"getUserMessages(userId = $userId)") {
       db.run(Messages.filter(message =>
         message.userId === userId &&
@@ -59,12 +58,62 @@ object Logic
         case e: Throwable =>
           Left(e.getMessage)
       }
+
+
+  def h2Init(): Unit = {
+
+    val schema = Users.schema ++ Messages.schema
+    Await.result(db.run(DBIO.seq(schema.create)), testFutureWaitTimeout)
+
+    val addUser =
+    (Users returning Users.map(_.id)) += UserRow(
+      id = None,
+      firstName = Some("TestFN_1"),
+      lastName = Some("TestLN_1"),
+      login = Some("TestLogin_1"),
+      email = Some("TestEMAIL_1"),
+      gender = Some(true), // false - fm , true - m
+      description = None,
+      isActive = true,
+      createdAt = Some(new Date()),
+      updatedAt = None,
+      deletedAt = None,
+      isDeleted = false
+    )
+    val userId = Await.result(db.run(addUser), testFutureWaitTimeout)
+
+    val addMessages =
+      Messages ++= Seq(
+        MessageRow(
+          id = None,
+          text = Some("Test_text_1"),
+          userId = userId,
+          createdAt = Some(new Date()),
+          updatedAt = None,
+          deletedAt = None,
+          isDeleted = false
+        ),
+        MessageRow(
+          id = None,
+          text = Some("Test_text_2"),
+          userId = userId,
+          createdAt = Some(new Date()),
+          updatedAt = None,
+          deletedAt = None,
+          isDeleted = false
+        )
+      )
+    db.run(addMessages)
   }
 
+  def h2drop() {
+    val schema = Users.schema ++ Messages.schema
+    db.run(DBIO.seq(schema.drop))
+  }
 
   // test
   def getOrCreateUserAndMessages(): Unit = {
-    val res: Seq[UserRow] = Await.result(db.run(Users.result), futureWaitTimeout)
+    val res: Seq[UserRow] = Await.result(db.run(Users.result), testFutureWaitTimeout)
     if (res.isEmpty) {
       val addUser =
         (Users returning Users.map(_.id)) += UserRow(
@@ -81,7 +130,7 @@ object Logic
           deletedAt = None,
           isDeleted = false
         )
-      val userId = Await.result(db.run(addUser), futureWaitTimeout)
+      val userId = Await.result(db.run(addUser), testFutureWaitTimeout)
       userId.foreach { id =>
         logger.debug(s"userId: $id")
       }
@@ -107,10 +156,10 @@ object Logic
             isDeleted = false
           )
         )
-      Await.result(db.run(addMessages), futureWaitTimeout)
+      Await.result(db.run(addMessages), testFutureWaitTimeout)
 
 
-      val res2 = Await.result(db.run(Users.result), futureWaitTimeout)
+      val res2 = Await.result(db.run(Users.result), testFutureWaitTimeout)
       res2.foreach { v =>
         logger.info(v.toString)
       }

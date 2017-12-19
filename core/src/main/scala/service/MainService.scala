@@ -12,7 +12,6 @@ import io.circe.generic.auto._
 import io.finch._
 import io.finch.circe.dropNullValues._
 import org.slf4j.{Logger, LoggerFactory}
-import util.logTime
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{Await => SAwait, Future => SFuture}
@@ -35,14 +34,9 @@ object MainService
   //  implicit def any2str(a: Any): String = a.toString
   //  logger.info(any2str(config.config))
 
-  getOrCreateUserAndMessages()
-  val user2 = SAwait.result(getUser(3), futureWaitTimeout)
-  logger.info(user2.toString)
 
-  logTime(s"test logTime") {
-    SFuture {3 + 2}
-  }
-
+  //getOrCreateUserAndMessages()
+  h2Init()
 
   def wrap[T](future: SFuture[Either[String, T]])(isEmpty: T => Boolean): SFuture[Output[T]] = {
     future.map { future =>
@@ -65,3 +59,12 @@ object MainService
   )
 
 }
+
+
+
+
+
+
+
+
+
