@@ -1,36 +1,41 @@
-package service
+package com.anymessenger.server.http4s
 
-import cats.Eval
-import cats.effect._
-import cats.implicits._
-import io.circe._
-import io.circe.literal._
-import io.circe.syntax._
-import org.http4s._
-//import org.http4s.dsl.io._
-//import org.http4s.implicits._
-//import org.http4s.client._
+import java.sql.Timestamp
 import java.util.Date
 
-import db.Logic
-import org.http4s.circe._
+import cats.Eval
+import cats.effect.IO
+import cats.implicits._
+import io.circe.literal._
+import io.circe.syntax._
+import io.circe.{Decoder, Encoder, Json}
 import org.http4s.dsl.Http4sDsl
 import org.http4s.server.blaze.BlazeBuilder
 import org.http4s.util.{ExitCode, StreamApp}
+import org.http4s.{HttpService, Response}
+import org.http4s.circe._
+//import org.http4s.dsl.io._
+//import org.http4s.implicits._
+//import org.http4s.client._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
-object MainHttp4s extends StreamApp[IO] with Http4sDsl[IO] {
+import com.anymessenger.service.helpers.HelpService._
+import com.anymessenger.service.impl.MainServiceImpl._
 
-  import Logic._
+object Http4sServer extends StreamApp[IO] with Http4sDsl[IO] {
+
   import io.circe.generic.auto._
 
   implicit val dateEncoder: Encoder[Date] = Encoder.instance(a => Json.fromLong(a.getTime))
   implicit val dateDecoder: Decoder[Date] = Decoder.instance(a => a.as[Long].map(new Date(_)))
 
-//def wrap[T](future: Future[Either[String, T]])(isEmpty: T => Boolean)(implicit enc: Encoder[T]): IO[Response[IO]] = {
+  implicit val timestampEncoder: Encoder[Timestamp] = Encoder.instance(a => Json.fromLong(a.getTime))
+  implicit val timestampDecoder: Decoder[Timestamp] = Decoder.instance(a => a.as[Long].map(new Timestamp(_)))
+
+  //  def wrap[T](future: Future[Either[String, T]])(isEmpty: T => Boolean)(implicit enc: Encoder[T]): IO[Response[IO]] = {
   def wrap[T: Encoder](future: Future[Either[String, T]])(isEmpty: T => Boolean): IO[Response[IO]] = {
     IO.fromFuture(Eval.always(future.map {
       Try(_) match {
@@ -41,6 +46,7 @@ object MainHttp4s extends StreamApp[IO] with Http4sDsl[IO] {
       }
     })).flatten
   }
+
   //InternalServerError(new Exception(msg))
   //InternalServerError(new Exception(e.getMessage))
 
@@ -64,15 +70,3 @@ object MainHttp4s extends StreamApp[IO] with Http4sDsl[IO] {
       //.mountService(services, "/api")
       .serve
 }
-
-
-
-
-
-
-
-
-
-
-
-

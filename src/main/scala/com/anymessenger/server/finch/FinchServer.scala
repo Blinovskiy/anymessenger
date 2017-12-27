@@ -1,12 +1,13 @@
-package service
+package com.anymessenger.server.finch
 
+import java.sql.Timestamp
 import java.util.Date
 
-import com.anymessenger.db.AnymessengerDBObjects
-import com.anymessenger.db.projection.{MessageRow, UserRow}
+import com.anymessenger.model.Tables._
+import com.anymessenger.service.impl.MainServiceImpl
 import com.twitter.finagle.Http
 import com.twitter.util.Await
-import db.{DBConfig, Logic}
+import db.DBConfig
 import io.circe._
 import io.circe.generic.auto._
 import io.finch._
@@ -17,18 +18,20 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{Await => SAwait, Future => SFuture}
 import scala.util.{Failure, Success, Try}
 
-object MainService
+object FinchServer
   extends App
-    with DBConfig
-    with AnymessengerDBObjects {
+    with DBConfig {
 
-  import Logic._
+  import MainServiceImpl._
 
-  private implicit val logger: Logger = LoggerFactory.getLogger(Logic.getClass)
+  private implicit val logger: Logger = LoggerFactory.getLogger(MainServiceImpl.getClass)
   //  override def schema = Some("ANY_DEV")
 
   implicit val dateEncoder: Encoder[Date] = Encoder.instance(a => Json.fromLong(a.getTime))
   implicit val dateDecoder: Decoder[Date] = Decoder.instance(a => a.as[Long].map(new Date(_)))
+
+  implicit val timestampEncoder: Encoder[Timestamp] = Encoder.instance(a => Json.fromLong(a.getTime))
+  implicit val timestampDecoder: Decoder[Timestamp] = Decoder.instance(a => a.as[Long].map(new Timestamp(_)))
 
   //  implicit val any2str: Any => String = a => a.toString
   //  implicit def any2str(a: Any): String = a.toString
@@ -36,7 +39,7 @@ object MainService
 
 
   //getOrCreateUserAndMessages()
-  h2Init()
+  //  h2Init()
 
   def wrap[T](future: SFuture[Either[String, T]])(isEmpty: T => Boolean): SFuture[Output[T]] = {
     future.map { future =>

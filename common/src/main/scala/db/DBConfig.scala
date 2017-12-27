@@ -11,7 +11,7 @@ import scala.concurrent.duration._
 // http://slick.lightbend.com/doc/3.2.1/database.html
 trait DBConfig {
 
-  lazy val config: DatabaseConfig[JdbcProfile] = DatabaseConfig.forConfig[JdbcProfile](Option(System.getProperty("config")).getOrElse("postgres"))
+  lazy val config: DatabaseConfig[JdbcProfile] = DatabaseConfig.forConfig[JdbcProfile]("database." + Option(System.getProperty("config")).getOrElse("postgres"))
   lazy val profile: JdbcProfile = config.profile
   lazy val db: JdbcBackend#DatabaseDef = config.db
 

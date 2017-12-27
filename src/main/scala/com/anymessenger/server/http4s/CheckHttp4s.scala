@@ -1,53 +1,59 @@
-package service
+package com.anymessenger.server.http4s
 
+import java.sql.Timestamp
 import java.util.Date
 
-import cats.Eval
 import cats.data.NonEmptyList
 import cats.effect.IO
-import com.anymessenger.db.projection.UserRow
-import io.circe._
+import io.circe.{Decoder, Encoder, Json}
 import org.http4s.CacheDirective.`no-cache`
-import org.http4s._
-import org.http4s.circe._
 import org.http4s.dsl.Http4sDsl
 import org.http4s.headers.`Cache-Control`
 import org.http4s.server.blaze.BlazeBuilder
 import org.http4s.util.{ExitCode, StreamApp}
-import org.http4s.headers.`Cache-Control`
-import org.http4s.CacheDirective.`no-cache`
-import cats.data.NonEmptyList
+import org.http4s.{Cookie, HttpService}
+//import org.http4s.dsl.io._
+//import org.http4s.implicits._
+//import org.http4s.client._
+import org.http4s.circe._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.util.{Failure, Success, Try}
+
+import cats.Eval
+import io.circe.literal._
+
+import com.anymessenger.model.Tables._
 
 object CheckHttp4s extends StreamApp[IO] with Http4sDsl[IO] {
 
-  import io.circe.syntax._
   import io.circe.generic.auto._
+  import io.circe.syntax._
 
   implicit val dateEncoder: Encoder[Date] = Encoder.instance(a => Json.fromLong(a.getTime))
   implicit val dateDecoder: Decoder[Date] = Decoder.instance(a => a.as[Long].map(new Date(_)))
 
   case class User(name: String, year: Int)
+
   val user = User("Serj", 24)
 
   case class UserOpt(name: Option[String], year: Option[Int], date: Option[Date])
+
   val userOpt = UserOpt(Some("Serj"), Some(24), Some(new Date))
 
   val urow = UserRow(
     id = None,
-    firstName = Some("TestFN"),
-    lastName = Some("TestLN"),
+    firstname = Some("TestFN"),
+    lastname = Some("TestLN"),
     login = Some("TestLogin"),
     email = Some("TestEMAIL"),
     gender = Some(true), // false - fm , true - m
     description = None,
-    isActive = true,
-    createdAt = Some(new Date()),
-    updatedAt = None,
-    deletedAt = None,
-    isDeleted = false
+    isactive = true,
+    createdat = Some(new Timestamp(new Date().getTime)),
+    updatedat = None,
+    deletedat = None,
+    isdeleted = false
   )
 
   val service: HttpService[IO] = HttpService[IO] {
