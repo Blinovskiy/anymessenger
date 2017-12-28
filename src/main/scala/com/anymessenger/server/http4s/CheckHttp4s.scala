@@ -15,20 +15,18 @@ import org.http4s.{Cookie, HttpService}
 //import org.http4s.dsl.io._
 //import org.http4s.implicits._
 //import org.http4s.client._
+import cats.Eval
+import com.anymessenger.model.Tables._
+import io.circe.generic.auto._
+import io.circe.literal._
+import io.circe.syntax._
 import org.http4s.circe._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-import cats.Eval
-import io.circe.literal._
-
-import com.anymessenger.model.Tables._
-
 object CheckHttp4s extends StreamApp[IO] with Http4sDsl[IO] {
 
-  import io.circe.generic.auto._
-  import io.circe.syntax._
 
   implicit val dateEncoder: Encoder[Date] = Encoder.instance(a => Json.fromLong(a.getTime))
   implicit val dateDecoder: Decoder[Date] = Decoder.instance(a => a.as[Long].map(new Date(_)))
@@ -42,7 +40,7 @@ object CheckHttp4s extends StreamApp[IO] with Http4sDsl[IO] {
   val userOpt = UserOpt(Some("Serj"), Some(24), Some(new Date))
 
   val urow = UserRow(
-    id = None,
+    id = -1L,
     firstname = Some("TestFN"),
     lastname = Some("TestLN"),
     login = Some("TestLogin"),

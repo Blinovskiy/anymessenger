@@ -14,6 +14,7 @@ import scala.concurrent.duration.FiniteDuration
 
 object HelpService extends Slicker with LazyLogging {
 
+  @deprecated("Do not use awaits","0.0.1")
   val testFutureWaitTimeout: FiniteDuration = FiniteDuration(TypesafeConfig.config.getLong("anymessenger.testFutureWaitTimeout"), TimeUnit.SECONDS)
 
   def h2Init(): Unit = {
@@ -23,7 +24,7 @@ object HelpService extends Slicker with LazyLogging {
 
     val addUser =
       (User returning User.map(_.id)) += UserRow(
-        id = None,
+        id = -1L,
         firstname = Some("TestFN_1"),
         lastname = Some("TestLN_1"),
         login = Some("TestLogin_1"),
@@ -42,20 +43,18 @@ object HelpService extends Slicker with LazyLogging {
     val addMessage =
       Message ++= Seq(
         MessageRow(
-          id = None,
+          id = -1L,
           text = Some("Test_text_1"),
-          userid = userid,
-          //          createdat = Some(new Date()),
+          userid = Some(userid),
           createdat = Some(new Timestamp(new Date().getTime)),
           updatedat = None,
           deletedat = None,
           isdeleted = false
         ),
         MessageRow(
-          id = None,
+          id = -1L,
           text = Some("Test_text_2"),
-          userid = userid,
-          //          createdat = Some(new Date()),
+          userid = Some(userid),
           createdat = Some(new Timestamp(new Date().getTime)),
           updatedat = None,
           deletedat = None,
@@ -76,7 +75,7 @@ object HelpService extends Slicker with LazyLogging {
     if (res.isEmpty) {
       val addUser =
         (User returning User.map(_.id)) += UserRow(
-          id = None,
+          id = -1L,
           firstname = Some("TestFN_1"),
           lastname = Some("TestLN_1"),
           login = Some("TestLogin_1"),
@@ -84,7 +83,6 @@ object HelpService extends Slicker with LazyLogging {
           gender = Some(true), // false - fm , true - m
           description = None,
           isactive = true,
-          //          createdat = Some(new Date()),
           createdat = Some(new Timestamp(new Date().getTime)),
           updatedat = None,
           deletedat = None,
@@ -96,20 +94,18 @@ object HelpService extends Slicker with LazyLogging {
       val addMessage =
         Message ++= Seq(
           MessageRow(
-            id = None,
+            id = -1L,
             text = Some("Test_text_1"),
-            userid = userid,
-            //            createdat = Some(new Date()),
+            userid = Some(userid),
             createdat = Some(new Timestamp(new Date().getTime)),
             updatedat = None,
             deletedat = None,
             isdeleted = false
           ),
           MessageRow(
-            id = None,
+            id = -1L,
             text = Some("Test_text_2"),
-            userid = userid,
-            //            createdat = Some(new Date()),
+            userid = Some(userid),
             createdat = Some(new Timestamp(new Date().getTime)),
             updatedat = None,
             deletedat = None,

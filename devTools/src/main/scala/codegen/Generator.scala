@@ -71,8 +71,8 @@ object Generator {
         //        dbTableName => dbTableName.toLowerCase.toCamelCase
 
         override def Column = new Column(_) {
-          override def rawType: String =
-            if (model.name == "id") "Option[Long]" else super.rawType
+          // override def rawType: String =
+          //   if (model.name == "id") "Option[Long]" else super.rawType
 
           // override def rawType: String = model.tpe match {
           //   case "java.sql.Date" => "java.util.Date"

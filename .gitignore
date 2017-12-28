@@ -8,7 +8,7 @@
 !BuildSettings.scala
 !Dependencies.scala
 !plugins.sbt
-project/
+project/project/
 .cache/
 .history/
 dist/*

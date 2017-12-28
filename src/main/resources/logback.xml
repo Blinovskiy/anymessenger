@@ -23,7 +23,7 @@
     </appender>
 
     <logger name="com.anymessenger"
-            level="INFO"
+            level="DEBUG"
             additivity="false">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="RFILE"/>
@@ -35,11 +35,6 @@
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="RFILE"/>
     </logger>
-
-    <Root level="INFO">
-        <appender-ref ref="STDOUT"/>
-        <appender-ref ref="RFILE"/>
-    </Root>
 
     <root level="INFO">
         <appender-ref ref="STDOUT"/>

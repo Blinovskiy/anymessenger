@@ -26,11 +26,11 @@ trait Tables {
    *  @param updatedat Database column updatedat SqlType(timestamp), Default(None)
    *  @param deletedat Database column deletedat SqlType(timestamp), Default(None)
    *  @param isdeleted Database column isdeleted SqlType(bool), Default(false) */
-  final case class MessageRow(id: Option[Long], text: Option[String] = None, userid: Option[Long] = None, createdat: Option[java.sql.Timestamp] = None, updatedat: Option[java.sql.Timestamp] = None, deletedat: Option[java.sql.Timestamp] = None, isdeleted: Boolean = false)
+  final case class MessageRow(id: Long, text: Option[String] = None, userid: Option[Long] = None, createdat: Option[java.sql.Timestamp] = None, updatedat: Option[java.sql.Timestamp] = None, deletedat: Option[java.sql.Timestamp] = None, isdeleted: Boolean = false)
   /** GetResult implicit for fetching MessageRow objects using plain SQL queries */
-  implicit def GetResultMessageRow(implicit e0: GR[Option[Long]], e1: GR[Option[String]], e2: GR[Option[java.sql.Timestamp]], e3: GR[Boolean]): GR[MessageRow] = GR{
+  implicit def GetResultMessageRow(implicit e0: GR[Long], e1: GR[Option[String]], e2: GR[Option[Long]], e3: GR[Option[java.sql.Timestamp]], e4: GR[Boolean]): GR[MessageRow] = GR{
     prs => import prs._
-    MessageRow.tupled((<<[Option[Long]], <<?[String], <<?[Long], <<?[java.sql.Timestamp], <<?[java.sql.Timestamp], <<?[java.sql.Timestamp], <<[Boolean]))
+    MessageRow.tupled((<<[Long], <<?[String], <<?[Long], <<?[java.sql.Timestamp], <<?[java.sql.Timestamp], <<?[java.sql.Timestamp], <<[Boolean]))
   }
   /** Table description of table message. Objects of this class serve as prototypes for rows in queries. */
   class Message(_tableTag: Tag) extends Table[MessageRow](_tableTag, "message") {
@@ -39,7 +39,7 @@ trait Tables {
     def ? = (Rep.Some(id), text, userid, createdat, updatedat, deletedat, Rep.Some(isdeleted)).shaped.<>({r=>import r._; _1.map(_=> MessageRow.tupled((_1.get, _2, _3, _4, _5, _6, _7.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
 
     /** Database column id SqlType(bigserial), AutoInc, PrimaryKey */
-    val id: Rep[Option[Long]] = column[Option[Long]]("id", O.AutoInc, O.PrimaryKey)
+    val id: Rep[Long] = column[Long]("id", O.AutoInc, O.PrimaryKey)
     /** Database column text SqlType(varchar), Length(256,true), Default(None) */
     val text: Rep[Option[String]] = column[Option[String]]("text", O.Length(256,varying=true), O.Default(None))
     /** Database column userid SqlType(int8), Default(None) */
@@ -69,11 +69,11 @@ trait Tables {
    *  @param updatedat Database column updatedat SqlType(timestamp), Default(None)
    *  @param deletedat Database column deletedat SqlType(timestamp), Default(None)
    *  @param isdeleted Database column isdeleted SqlType(bool), Default(false) */
-  final case class UserRow(id: Option[Long], firstname: Option[String] = None, lastname: Option[String] = None, login: Option[String] = None, email: Option[String] = None, gender: Option[Boolean] = None, description: Option[String] = None, isactive: Boolean = true, createdat: Option[java.sql.Timestamp] = None, updatedat: Option[java.sql.Timestamp] = None, deletedat: Option[java.sql.Timestamp] = None, isdeleted: Boolean = false)
+  final case class UserRow(id: Long, firstname: Option[String] = None, lastname: Option[String] = None, login: Option[String] = None, email: Option[String] = None, gender: Option[Boolean] = None, description: Option[String] = None, isactive: Boolean = true, createdat: Option[java.sql.Timestamp] = None, updatedat: Option[java.sql.Timestamp] = None, deletedat: Option[java.sql.Timestamp] = None, isdeleted: Boolean = false)
   /** GetResult implicit for fetching UserRow objects using plain SQL queries */
-  implicit def GetResultUserRow(implicit e0: GR[Option[Long]], e1: GR[Option[String]], e2: GR[Option[Boolean]], e3: GR[Boolean], e4: GR[Option[java.sql.Timestamp]]): GR[UserRow] = GR{
+  implicit def GetResultUserRow(implicit e0: GR[Long], e1: GR[Option[String]], e2: GR[Option[Boolean]], e3: GR[Boolean], e4: GR[Option[java.sql.Timestamp]]): GR[UserRow] = GR{
     prs => import prs._
-    UserRow.tupled((<<[Option[Long]], <<?[String], <<?[String], <<?[String], <<?[String], <<?[Boolean], <<?[String], <<[Boolean], <<?[java.sql.Timestamp], <<?[java.sql.Timestamp], <<?[java.sql.Timestamp], <<[Boolean]))
+    UserRow.tupled((<<[Long], <<?[String], <<?[String], <<?[String], <<?[String], <<?[Boolean], <<?[String], <<[Boolean], <<?[java.sql.Timestamp], <<?[java.sql.Timestamp], <<?[java.sql.Timestamp], <<[Boolean]))
   }
   /** Table description of table user. Objects of this class serve as prototypes for rows in queries. */
   class User(_tableTag: Tag) extends Table[UserRow](_tableTag, "user") {
@@ -82,7 +82,7 @@ trait Tables {
     def ? = (Rep.Some(id), firstname, lastname, login, email, gender, description, Rep.Some(isactive), createdat, updatedat, deletedat, Rep.Some(isdeleted)).shaped.<>({r=>import r._; _1.map(_=> UserRow.tupled((_1.get, _2, _3, _4, _5, _6, _7, _8.get, _9, _10, _11, _12.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
 
     /** Database column id SqlType(bigserial), AutoInc, PrimaryKey */
-    val id: Rep[Option[Long]] = column[Option[Long]]("id", O.AutoInc, O.PrimaryKey)
+    val id: Rep[Long] = column[Long]("id", O.AutoInc, O.PrimaryKey)
     /** Database column firstname SqlType(varchar), Length(32,true), Default(None) */
     val firstname: Rep[Option[String]] = column[Option[String]]("firstname", O.Length(32,varying=true), O.Default(None))
     /** Database column lastname SqlType(varchar), Length(32,true), Default(None) */

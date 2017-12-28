@@ -4,6 +4,7 @@ import sbt.Keys._
 lazy val root = (project in file("."))
   .settings(commonSettings)
   .settings(revolverSettings)
+  .settings(assemblySettings)
   .settings(
     name := "anymessenger",
     organization := "com.anymessenger",
@@ -67,22 +68,6 @@ lazy val commonSettings = Seq(
     "-language:higherKinds",
     "-Ypartial-unification"
   ),
-  //    resolvers ++= Seq(
-  //        "Sonatype snapshots" at "http://oss.sonatype.org/content/repositories/snapshots",
-  //        "Sonatype releases" at "http://oss.sonatype.org/content/repositories/releases",
-  //        "sonatype.repo" at "https://oss.sonatype.org/content/repositories/public/",
-  //        "apache.repo" at "https://repository.apache.org/content/repositories/snapshots/",
-  //        //      "Typesafe Releases" at "http://repo.typesafe.com/typesafe/maven-releases/",
-  //        //      "confluent" at "http://packages.confluent.io/maven/"
-  //    ),
-  //    assemblyMergeStrategy in assembly := {
-  //        case PathList("org", "slf4j", "impl", xs @ _*) => MergeStrategy.first // take from logback-classic-1.1.11
-  //        case PathList("org", "slf4j", xs @ _*) => MergeStrategy.last // take from slf4j-api-1.7.22
-  //        case "overview.html" => MergeStrategy.discard // remove overview.html from org.springframework libs
-  //        case x =>
-  //            val oldStrategy = (assemblyMergeStrategy in assembly).value
-  //            oldStrategy(x)
-  //    }
 )
 
 // code generation task that calls the customized code generator
@@ -101,6 +86,7 @@ lazy val rootFilter = ScopeFilter(inProjects(root))
 
 // dev
 addCommandAlias("s", "; reStart")
+addCommandAlias("r", "; ~reStart")
 addCommandAlias("st", "; reStop")
 
 // build
