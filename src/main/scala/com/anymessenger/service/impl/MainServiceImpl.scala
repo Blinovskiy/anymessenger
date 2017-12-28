@@ -1,20 +1,20 @@
 package com.anymessenger.service.impl
 
 import com.anymessenger.model.Tables._
+import com.anymessenger.model.Tables.profile.api._
 import com.anymessenger.service.api.MainService
-import db.DBConfig
-import org.slf4j.{Logger, LoggerFactory}
+import com.typesafe.scalalogging.{LazyLogging, Logger}
+import config.Slicker
 import util.logTimeF
 
 import scala.concurrent.{ExecutionContext, Future}
 
 object MainServiceImpl
   extends MainService
-    with DBConfig {
+    with Slicker
+    with LazyLogging {
 
-  private implicit val logger: Logger = LoggerFactory.getLogger(this.getClass)
-
-  import profile.api._
+  implicit val _logger: Logger = logger
 
   def getUser(userid: Long)(implicit executor: ExecutionContext): Future[Either[String, Option[UserRow]]] =
     logTimeF(s"getUser(customerId = $userid)") {

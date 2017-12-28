@@ -34,15 +34,15 @@ lazy val devTools = (project in file("devTools"))
 
 lazy val revolverSettings = Revolver.settings ++ Seq(
   javaOptions in reStart += "-Xmx2g",
-  mainClass in reStart := Some("com.anymessenger.server.finch.MainService"),
+  mainClass in reStart := Some("com.anymessenger.server.finch.FinchServer"),
   reColors := Seq("blue", "green", "magenta"),
   fork in run := true,
   //  Revolver.enableDebugging(port = 5050, suspend = true),
   //  envVars in reStart := Map("USER_TOKEN" -> "2359298356239")
-  //  javaOptions in run ++= Seq("-Dconfig=H2"),
-  //  javaOptions in reStart ++= Seq("-Dconfig=H2")
-  javaOptions in run ++= Seq("-Dconfig=postgres"),
-  javaOptions in reStart ++= Seq("-Dconfig=postgres")
+  //  javaOptions in run ++= Seq("-Ddatabase=H2"),
+  //  javaOptions in reStart ++= Seq("-Ddatabase=H2")
+  javaOptions in run ++= Seq("-Ddatabase=postgres"),
+  javaOptions in reStart ++= Seq("-Ddatabase=postgres")
 )
 
 lazy val assemblySettings = Seq(
@@ -105,7 +105,6 @@ addCommandAlias("st", "; reStop")
 
 // build
 addCommandAlias("pack", "; clean; assembly")
-
 
 
 //// todo: use plugin for frontend building

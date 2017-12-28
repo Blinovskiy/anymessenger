@@ -2,18 +2,19 @@ package com.anymessenger.service.helpers
 
 import java.sql.Timestamp
 import java.util.Date
+import java.util.concurrent.TimeUnit
 
 import com.anymessenger.model.Tables._
-import db.DBConfig
-import org.slf4j.{Logger, LoggerFactory}
+import com.anymessenger.model.Tables.profile.api._
+import com.typesafe.scalalogging.LazyLogging
+import config.{Slicker, TypesafeConfig}
 
 import scala.concurrent.Await
+import scala.concurrent.duration.FiniteDuration
 
-object HelpService extends DBConfig {
+object HelpService extends Slicker with LazyLogging {
 
-  private implicit val logger: Logger = LoggerFactory.getLogger(this.getClass)
-
-  import profile.api._
+  val testFutureWaitTimeout: FiniteDuration = FiniteDuration(TypesafeConfig.config.getLong("anymessenger.testFutureWaitTimeout"), TimeUnit.SECONDS)
 
   def h2Init(): Unit = {
 

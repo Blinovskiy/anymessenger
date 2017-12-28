@@ -6,6 +6,7 @@ import java.util.Date
 import com.anymessenger.model.Tables._
 import com.twitter.finagle.Http
 import com.twitter.util.Await
+import config.TypesafeConfig
 import io.circe._
 import io.circe.generic.auto._
 import io.finch._
@@ -63,7 +64,7 @@ object CheckFinch extends App {
   )
 
   val user: Endpoint[Option[UserRow]] = get("user" :: path[Long]) { id: Long => Ok(Option(ur)) }
-  Await.ready(Http.server.serve(":8081", user.toService))
+  Await.ready(Http.server.serve(TypesafeConfig.interface + TypesafeConfig.port, user.toService))
 
 
   //  // finch

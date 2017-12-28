@@ -1,6 +1,6 @@
 import java.text.SimpleDateFormat
 
-import org.slf4j.Logger
+import com.typesafe.scalalogging.Logger
 
 import scala.concurrent.{ExecutionContext, Future}
 

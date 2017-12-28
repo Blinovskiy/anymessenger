@@ -6,6 +6,7 @@ import java.util.Date
 import cats.Eval
 import cats.effect.IO
 import cats.implicits._
+import config.TypesafeConfig
 import io.circe.literal._
 import io.circe.syntax._
 import io.circe.{Decoder, Encoder, Json}
@@ -65,7 +66,7 @@ object Http4sServer extends StreamApp[IO] with Http4sDsl[IO] {
 
   def stream(args: List[String], requestShutdown: IO[Unit]): fs2.Stream[IO, ExitCode] =
     BlazeBuilder[IO]
-      .bindHttp(8081, "0.0.0.0")
+      .bindHttp(TypesafeConfig.port, TypesafeConfig.interface)
       .mountService(services, "/")
       //.mountService(services, "/api")
       .serve
