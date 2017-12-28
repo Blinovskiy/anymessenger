@@ -7,8 +7,18 @@ import scala.concurrent.{ExecutionContext, Future}
 package object util {
 
   val DEFAULT_DATE_MASK = "yyyy-MM-dd"
+  val DEFAULT_TIMESTAMP_MASK = "yyyy-MM-dd HH:mm:ss"
 
   val defaultDateFormatter = new SimpleDateFormat(DEFAULT_DATE_MASK)
+  val defaultTimestampFormat = new SimpleDateFormat(DEFAULT_TIMESTAMP_MASK)
+
+  def logTime[T](msg: String)(f: => T)(implicit logger: Logger): T = {
+    val start = System.currentTimeMillis
+    logger.debug(s"$msg - Started")
+    val result = f
+    logger.debug(s"$msg - Finished (took ${System.currentTimeMillis - start} ms)")
+    result
+  }
 
   def logTimeF[T](msg: String)(f: => Future[T])(implicit ec: ExecutionContext, logger: Logger): Future[T] = {
     val start = System.nanoTime()

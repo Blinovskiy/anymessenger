@@ -4,13 +4,13 @@ import sbt.Keys._
 lazy val root = (project in file("."))
   .settings(commonSettings)
   .settings(revolverSettings)
+  .settings(assemblySettings)
   .settings(
     name := "anymessenger",
     organization := "com.anymessenger",
     version := "0.1",
-    mainClass in Compile := Some("com.anymessenger.server.finch.FinchServer"),
-    //mainClass in Compile := Some("com.anymessenger.server.http4s.Http4sServer"),
-    libraryDependencies ++= commonDeps ++ http4sDeps ++ finagleDeps ++ jdbcDeps ++ testDeps
+    mainClass in Compile := Some("com.anymessenger.server.http4s.Http4sServer"),
+    libraryDependencies ++= commonDeps ++ http4sDeps ++ jdbcDeps ++ testDeps
   )
   .dependsOn(slick_model)
   .dependsOn(common)
@@ -34,20 +34,18 @@ lazy val devTools = (project in file("devTools"))
 
 lazy val revolverSettings = Revolver.settings ++ Seq(
   javaOptions in reStart += "-Xmx2g",
-  mainClass in reStart := Some("com.anymessenger.server.finch.FinchServer"),
+  mainClass in reStart := Some("com.anymessenger.server.http4s.Http4sServer"),
   reColors := Seq("blue", "green", "magenta"),
   fork in run := true,
   //  Revolver.enableDebugging(port = 5050, suspend = true),
   //  envVars in reStart := Map("USER_TOKEN" -> "2359298356239")
-  //  javaOptions in run ++= Seq("-Ddatabase=H2"),
-  //  javaOptions in reStart ++= Seq("-Ddatabase=H2")
   javaOptions in run ++= Seq("-Ddatabase=postgres"),
   javaOptions in reStart ++= Seq("-Ddatabase=postgres")
 )
 
 lazy val assemblySettings = Seq(
-  //mainClass in assembly := Some("com.anymessenger.server.finch.FinchServer"),
-  assemblyJarName in assembly := s"anymessenger-${version.value}.jar",
+  //mainClass in assembly := Some("com.anymessenger.server.http4s.Http4sServer"),
+  assemblyJarName in assembly := s"anymessenger.jar",
   test in assembly := {}
 )
 
@@ -67,29 +65,13 @@ lazy val commonSettings = Seq(
     "-language:higherKinds",
     "-Ypartial-unification"
   ),
-  //    resolvers ++= Seq(
-  //        "Sonatype snapshots" at "http://oss.sonatype.org/content/repositories/snapshots",
-  //        "Sonatype releases" at "http://oss.sonatype.org/content/repositories/releases",
-  //        "sonatype.repo" at "https://oss.sonatype.org/content/repositories/public/",
-  //        "apache.repo" at "https://repository.apache.org/content/repositories/snapshots/",
-  //        //      "Typesafe Releases" at "http://repo.typesafe.com/typesafe/maven-releases/",
-  //        //      "confluent" at "http://packages.confluent.io/maven/"
-  //    ),
-  //    assemblyMergeStrategy in assembly := {
-  //        case PathList("org", "slf4j", "impl", xs @ _*) => MergeStrategy.first // take from logback-classic-1.1.11
-  //        case PathList("org", "slf4j", xs @ _*) => MergeStrategy.last // take from slf4j-api-1.7.22
-  //        case "overview.html" => MergeStrategy.discard // remove overview.html from org.springframework libs
-  //        case x =>
-  //            val oldStrategy = (assemblyMergeStrategy in assembly).value
-  //            oldStrategy(x)
-  //    }
 )
 
 // code generation task that calls the customized code generator
 lazy val generate = taskKey[Seq[File]]("Generate Slick Tables")
 lazy val slickCodeGenTask = Def.task {
   val dir = baseDirectory.all(rootFilter).value.head
-  val cp = (fullClasspath in Compile).value.files :+ (dir / "lib" / "postgresql-42.1.4.jar")
+  val cp = (fullClasspath in Compile).value.files //:+ (dir / "lib" / "postgresql-42.1.4.jar")
   val r = (runner in Compile).value
   val s = streams.value
   val outputDir = (dir / "slick_model" / "src" / "main" / "scala").getPath // place generated files in sbt's managed sources folder
@@ -101,6 +83,7 @@ lazy val rootFilter = ScopeFilter(inProjects(root))
 
 // dev
 addCommandAlias("s", "; reStart")
+addCommandAlias("r", "; ~reStart")
 addCommandAlias("st", "; reStop")
 
 // build
