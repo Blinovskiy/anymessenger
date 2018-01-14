@@ -1,4 +1,4 @@
-package config
+package com.anymessenger.config
 
 import com.typesafe.scalalogging.LazyLogging
 

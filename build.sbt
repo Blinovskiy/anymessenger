@@ -50,7 +50,9 @@ lazy val assemblySettings = Seq(
 )
 
 lazy val commonSettings = Seq(
-  resolvers ++= Seq(Resolver.mavenLocal),
+//  resolvers ++= Seq(Resolver.mavenLocal),
+
+  resolvers += Resolver.sonatypeRepo("snapshots"),
   scalaVersion := "2.12.4",
   unmanagedBase := file("lib"),
   scalacOptions := Seq(
@@ -81,38 +83,40 @@ lazy val slickCodeGenTask = Def.task {
 }
 lazy val rootFilter = ScopeFilter(inProjects(root))
 
+// todo: use plugin for frontend building
+val buildUI = taskKey[Unit]("Execute frontend scripts")
+buildUI := {
+  import scala.language.postfixOps
+  import scala.sys.process._
+
+  val s: TaskStreams = streams.value
+  val shell: Seq[String] = Seq("bash", "-c")
+  val npmInstall: Seq[String] = shell :+ "cd ui && npm install"
+  val npmBuild: Seq[String] = shell :+ "cd ui && npm run-script build"
+  val copyBundle: Seq[String] = shell :+ "mkdir -p ./target/scala-2.12/classes/ui/dist && cp -rf ./ui/dist/* ./target/scala-2.12/classes/ui"
+
+  s.log.info("buildUI task is in progress...")
+
+  val packageTask: ProcessBuilder =
+    npmInstall #&&
+      npmBuild #&&
+      copyBundle
+
+  if ((packageTask !) == 0) {
+    s.log.success("buildUI task was finished successfully!")
+  } else {
+    throw new IllegalStateException("buildUI task failed!")
+  }
+}
+
 // dev
 addCommandAlias("s", "; reStart")
 addCommandAlias("r", "; ~reStart")
 addCommandAlias("st", "; reStop")
 
-// build
-addCommandAlias("pack", "; clean; assembly")
+// dev with ui
+addCommandAlias("sb", "; clean; buildUI; reStart")
 
-
-//// todo: use plugin for frontend building
-//val buildFrontend = taskKey[Unit]("Execute frontend scripts")
-//buildFrontend := {
-//  import scala.language.postfixOps
-//  import scala.sys.process._
-//
-//  val s: TaskStreams = streams.value
-//  val shell: Seq[String] = Seq("bash", "-c")
-//  val npmInstall: Seq[String] = shell :+ "cd js-ui && npm install"
-//  val npmBuild: Seq[String] = shell :+ "cd js-ui && npm run build"
-//  val copyBundle: Seq[String] = shell :+ "mkdir -p ./core/target/scala-2.12/classes/jsui && cp -rf ./js-ui/dist/* ./core/target/scala-2.12/classes/jsui"
-//  s.log.info("Frontend build has been started...")
-//
-//  val packageTask: ProcessBuilder =
-//    npmInstall #&&
-//      npmBuild
-//  //    #&& copyBundle
-//
-//  if ((packageTask !) == 0) {
-//    s.log.success("Frontend has been built successfully!")
-//  } else {
-//    throw new IllegalStateException("frontend build failed!")
-//  }
-//}
-//addCommandAlias("pf", "; clean; buildFrontend; core/assembly")
+// build with ui
+addCommandAlias("pack", "; clean; buildUI; assembly")
 

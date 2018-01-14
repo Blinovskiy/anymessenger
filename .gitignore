@@ -44,6 +44,6 @@ bundle.js
 dist*/*
 coverage/*
 stats.json
-
+package-lock.json
 
 

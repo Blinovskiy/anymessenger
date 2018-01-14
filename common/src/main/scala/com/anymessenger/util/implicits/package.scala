@@ -1,4 +1,4 @@
-package util
+package com.anymessenger.util
 
 import java.time.{Instant, LocalDate, ZoneId}
 import java.util.Date

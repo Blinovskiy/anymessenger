@@ -9,7 +9,7 @@ object Dependencies {
     "slick" -> "3.2.1",
     "circe" -> "0.9.0-M2",
     "finch" -> "0.16.0-M5",
-    "http4sVersion" -> "0.18.0-M5",
+    "http4sVersion" -> "0.18.0-M8",
     "test" -> "3.0.1",
 
     // logging

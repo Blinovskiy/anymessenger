@@ -31,6 +31,16 @@ Apply migration:
 ./db/migrations/0.0.1/0.0.1-DB_INIT.sql
 ```
 
+Build UI:
+```
+npm run-script build
+```
+
+Or using npm dev server (localhost:3000):
+```
+npm start
+```
+
 Start:
 
 ```
@@ -71,7 +81,7 @@ For changing sourced DB configuration please check `slick_gen/Config.scala` sour
 ## Build artifacts
 
 ```
-sbt assembly
+sbt pack
 ```
 
 Output is written to `target/scala-2.12/anymessenger.jar`.

@@ -4,10 +4,10 @@ import java.sql.Timestamp
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
-import com.anymessenger.model.Tables._
-import com.anymessenger.model.Tables.profile.api._
+import com.anymessenger.dbmodel.Tables._
+import com.anymessenger.dbmodel.Tables.profile.api._
 import com.typesafe.scalalogging.LazyLogging
-import config.{Slicker, TypesafeConfig}
+import com.anymessenger.config.{Slicker, TypesafeConfig}
 
 import scala.concurrent.Await
 import scala.concurrent.duration.FiniteDuration

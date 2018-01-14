@@ -1,4 +1,8 @@
+package com.anymessenger
+
+import java.sql.Timestamp
 import java.text.SimpleDateFormat
+import java.util.Date
 
 import com.typesafe.scalalogging.Logger
 
@@ -11,6 +15,8 @@ package object util {
 
   val defaultDateFormatter = new SimpleDateFormat(DEFAULT_DATE_MASK)
   val defaultTimestampFormat = new SimpleDateFormat(DEFAULT_TIMESTAMP_MASK)
+
+  def nowTimestamp = new Timestamp(new Date().getTime)
 
   def logTime[T](msg: String)(f: => T)(implicit logger: Logger): T = {
     val start = System.currentTimeMillis

@@ -75,8 +75,8 @@ object Generator {
           //   if (model.name == "id") "Option[Long]" else super.rawType
 
           // override def rawType: String = model.tpe match {
-          //   case "java.sql.Date" => "java.util.Date"
-          //   case "java.sql.Timestamp" => "java.util.Date"
+          //   case "java.sql.Date" => "java.com.anymessenger.util.Date"
+          //   case "java.sql.Timestamp" => "java.com.anymessenger.util.Date"
           //   // currently, all types that's not built-in support were mapped to `String`
           //   case "String" => model.options.find(_.isInstanceOf[ColumnOption.SqlType]).map(_.asInstanceOf[ColumnOption.SqlType].typeName).map({
           //     case "hstore" => "Map[String, String]"

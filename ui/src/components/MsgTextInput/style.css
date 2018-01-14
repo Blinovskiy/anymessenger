@@ -1,0 +1,37 @@
+.newmsg {
+  display: block;
+  position: relative;
+  margin: 0;
+  font-size: 16px;
+  font-family: inherit;
+  font-weight: inherit;
+  /*line-height: 1.4em;*/
+  outline: none;
+  color: inherit;
+  border: none;
+  box-sizing: border-box;
+  /*overflow: auto;*/
+  width: 100%;
+  height: 100px;
+  resize: none;
+  /*direction: ltr;*/
+}
+
+.sendbtn {
+  display: block;
+  position: inherit;
+  margin: 0;
+  width: 100%;
+  font-size: 20px;
+  font-family: inherit;
+  /*font-style: italic;*/
+  /*font-weight: bold;*/
+  /*line-height: 1.4em;*/
+  border: none;
+  outline: none;
+  color: inherit;
+  padding: 5px;
+  box-sizing: border-box;
+  background: #b0ceff;
+  /*border-radius: 0 0 5px 5px ;*/
+}
