@@ -1,6 +1,6 @@
-package com.anymessenger.service.model
+package com.anymessenger.service.model.request
 
-case class MessageEntity(
+case class RequestMessageEntity(
                           id: Option[Long],
                           text: String,
                           userId: Long

@@ -4,19 +4,17 @@ declare type id = number;
 
 declare interface MsgItemData {
   id?: id;
-  text?: string;
-  userid?: id;
+  text: string;
+  userinfo: UserItemData;
   createdat?: Date;
   updatedat?: Date;
-  deletedat?: Date;
-  isdeleted?: boolean;
 }
 
 declare type MsgStoreState = MsgItemData[];
 
 declare interface ChatData {
   editingItem: undefined | MsgItemData;
-  editingMode: boolean;
+  loggedInUser: undefined | UserItemData;
 }
 declare type ChatState = ChatData;
 
@@ -31,9 +29,7 @@ declare interface UserItemData {
   description?: string;
   createdat?: Date;
   updatedat?: Date;
-  deletedat?: Date;
-  isdeleted: boolean;
 }
 
-declare type UserStoreState = UserItemData[];
+// declare type UserStoreState = UserItemData[];
 

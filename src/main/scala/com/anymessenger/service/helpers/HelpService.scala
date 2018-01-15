@@ -19,16 +19,16 @@ object HelpService extends Slicker with LazyLogging {
 
   def h2Init(): Unit = {
 
-    val schema = User.schema ++ Message.schema
+    val schema = Userinfo.schema ++ Message.schema
     Await.result(db.run(DBIO.seq(schema.create)), testFutureWaitTimeout)
 
     val addUser =
-      (User returning User.map(_.id)) += UserRow(
+      (Userinfo returning Userinfo.map(_.id)) += UserinfoRow(
         id = -1L,
         firstname = Some("TestFN_1"),
         lastname = Some("TestLN_1"),
-        login = Some("TestLogin_1"),
-        email = Some("TestEMAIL_1"),
+        login = "TestLogin_1",
+        email = "TestEMAIL_1",
         gender = Some(true), // false - fm , true - m
         description = None,
         isactive = true,
@@ -65,21 +65,21 @@ object HelpService extends Slicker with LazyLogging {
   }
 
   def h2drop() {
-    val schema = User.schema ++ Message.schema
+    val schema = Userinfo.schema ++ Message.schema
     db.run(DBIO.seq(schema.drop))
   }
 
   // test
   def getOrCreateUserAndMessages(): Unit = {
-    val res: Seq[UserRow] = Await.result(db.run(User.result), testFutureWaitTimeout)
+    val res: Seq[UserinfoRow] = Await.result(db.run(Userinfo.result), testFutureWaitTimeout)
     if (res.isEmpty) {
       val addUser =
-        (User returning User.map(_.id)) += UserRow(
+        (Userinfo returning Userinfo.map(_.id)) += UserinfoRow(
           id = -1L,
           firstname = Some("TestFN_1"),
           lastname = Some("TestLN_1"),
-          login = Some("TestLogin_1"),
-          email = Some("TestEMAIL_1"),
+          login = "TestLogin_1",
+          email = "TestEMAIL_1",
           gender = Some(true), // false - fm , true - m
           description = None,
           isactive = true,
@@ -115,7 +115,7 @@ object HelpService extends Slicker with LazyLogging {
       Await.result(db.run(addMessage), testFutureWaitTimeout)
 
 
-      val res2 = Await.result(db.run(User.result), testFutureWaitTimeout)
+      val res2 = Await.result(db.run(Userinfo.result), testFutureWaitTimeout)
       res2.foreach { v =>
         logger.info(v.toString)
       }

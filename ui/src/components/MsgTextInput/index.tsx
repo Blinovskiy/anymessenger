@@ -1,15 +1,12 @@
 import * as React from 'react';
 import * as style from './style.css';
-import {postMessage} from '../../api/api';
 
 export namespace MsgTextInput {
   export interface Props {
     editingItem?: MsgItemData;
-    placeholder?: string;
     onSend: (msg: MsgItemData) => any;
     editLast: () => any;
     cancelEdit: () => any;
-    // cancelEdit: (msg: MsgItemData) => any;
     updateMsgs: (msgs: MsgItemData[]) => any;
   }
 
@@ -23,51 +20,59 @@ export class MsgTextInput extends React.Component<MsgTextInput.Props, MsgTextInp
   constructor(props?: MsgTextInput.Props, context?: any) {
     super(props, context);
     this.state = {
-      text: this.props.editingItem ? this.props.editingItem.text : undefined
+      text: this.props.editingItem ? this.props.editingItem.text : ''
+      // text: this.props.editingItem ? this.props.editingItem.text : undefined
     };
   }
 
+  componentWillMount() {
+    document.addEventListener("keyup", this.handleCancelKey)
+  };
+
+  componentWillUnmount() {
+    document.removeEventListener("keyup", this.handleCancelKey)
+  };
+
   componentWillReceiveProps(nextProps) {
-    // console.log('nextProps MTI -> ::',nextProps);
+    console.log('nextProps MsgTextInput -> ', nextProps);
     if (nextProps.editingItem) this.setState({text: nextProps.editingItem.text})
   }
 
   handleSend = () => {
     if (this.state.text.trim() != '') {
       const text = this.state.text.trim();
-      this.props.onSend({text});
+      const userinfo = {id: 1};
+      this.props.onSend({text, userinfo});
+      this.setState({text: ''});
     }
-    this.setState({text: ''})
   };
 
   handleChange = (e) => {
+    // console.log('e.target.value=',e.target.value);
+    // if (e.target.value != '\n')
     this.setState({text: e.target.value});
   };
 
-  // handleKeyPress = (e) => {
-  //   if (e.key === 'Enter') {
-  //     this.handleSend()
-  //   }
-  // };
-
-  // left = 37
-  // up = 38
-  // right = 39
-  // down = 40
-  handleKeyUp = (e) => {
+  handleKey = (e) => {
     if (e.key === 'Enter') {
-      this.handleSend()
-    } else if (e.keyCode === 38) {
-      this.props.editLast()
-    } else if (e.keyCode === 27) {
-      this.props.cancelEdit();
+      this.handleSend();
+      this.setState({text: ''});
+    } else if (e.keyCode === 38 && this.state.text.trim() == '') { // arrow up
+      console.log('edit last');
+      this.props.editLast();
       this.setState({text: ''});
     }
-    // else if (e.keyCode === 40) {
-    //   postMessage(-1,this.state.text.trim(),2)
-    //     .then(res => {console.log('postedMessage::',res)})
-    //     .catch(reason => console.log(reason));
-    // }
+  };
+
+  handleCancelKey = (e) => {
+    switch (e.keyCode) {
+      case 27: // esc
+        this.props.cancelEdit();
+        this.setState({text: ''});
+        break;
+      default:
+        break;
+    }
   };
 
   render() {
@@ -77,10 +82,9 @@ export class MsgTextInput extends React.Component<MsgTextInput.Props, MsgTextInp
       <div className={style.view}>
         <textarea className={style.newmsg}
                   autoFocus
-                  placeholder={this.props.placeholder}
                   value={this.state.text}
                   onChange={this.handleChange}
-                  onKeyUp={this.handleKeyUp}
+                  onKeyUp={this.handleKey}
         />
         <button
           className={style.sendbtn}

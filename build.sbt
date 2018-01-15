@@ -37,7 +37,7 @@ lazy val revolverSettings = Revolver.settings ++ Seq(
   mainClass in reStart := Some("com.anymessenger.server.http4s.Http4sServer"),
   reColors := Seq("blue", "green", "magenta"),
   fork in run := true,
-  //  Revolver.enableDebugging(port = 5050, suspend = true),
+  Revolver.enableDebugging(port = 5050, suspend = false),
   //  envVars in reStart := Map("USER_TOKEN" -> "2359298356239")
   javaOptions in run ++= Seq("-Ddatabase=postgres"),
   javaOptions in reStart ++= Seq("-Ddatabase=postgres")
@@ -50,8 +50,7 @@ lazy val assemblySettings = Seq(
 )
 
 lazy val commonSettings = Seq(
-//  resolvers ++= Seq(Resolver.mavenLocal),
-
+  //  resolvers ++= Seq(Resolver.mavenLocal),
   resolvers += Resolver.sonatypeRepo("snapshots"),
   scalaVersion := "2.12.4",
   unmanagedBase := file("lib"),

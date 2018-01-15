@@ -1,5 +1,5 @@
-create table "user" (
-  id          serial,
+create table "userinfo" (
+  id          bigserial,
   firstname   varchar(32),
   lastname    varchar(32),
   login       varchar(32)              not null,
@@ -14,9 +14,9 @@ create table "user" (
 );
 
 create table "message" (
-  id        serial                not null,
+  id        bigserial                not null,
   text      varchar(256),
-  userid    integer,
+  userid    bigint,
   createdat timestamp(6),
   updatedat timestamp(6),
   deletedat timestamp(6),

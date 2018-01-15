@@ -13,7 +13,6 @@ export namespace MainSection {
   }
 
   export interface State {
-    editing: boolean;
     text: string;
     id: number;
   }
@@ -25,14 +24,13 @@ export class MainSection extends React.Component<MainSection.Props, MainSection.
     super(props, context);
     const ei = this.props.chat.editingItem;
     this.state = {
-      editing: this.props.chat.editingMode,
       text: ei ? ei.text : '',
       id: ei ? ei.id : -1
     }
   }
 
   updateMsgs = () => {
-    getLastNMessages(5)
+    getLastNMessages(8)
       .then(res => {
         console.log('getLastNMessages::', res);
         this.props.actions.updateMsgs(res)
@@ -45,41 +43,45 @@ export class MainSection extends React.Component<MainSection.Props, MainSection.
   }
 
   componentWillReceiveProps(nextProps) {
-    // console.log('nextProps MTI -> ::',nextProps);
+    // console.log('nextProps MainSection -> ',nextProps);
     if (nextProps.chat.editingItem) this.setState({id: nextProps.chat.editingItem.id});
     else this.setState({id: -1})
   }
 
-  // componentWillUpdate(nextProps, nextState) {
-  //   getAllMessages()
-  //     .then(res => {
-  //       console.log('getAllMessages::', res);
-  //       this.props.actions.updateMsgs(res)
-  //     })
-  //     .catch(reason => console.log(reason));
-  // }
-
   handleSendMsg = (msg: MsgItemData) => {
     console.log('editingItem:', this.props.chat.editingItem);
-    console.log('msg: ', msg);
     if (this.props.chat.editingItem) {
       const id = this.props.chat.editingItem.id;
       const text = msg.text;
-      this.props.actions.editMsg({id, text});
-      console.log('posting msg::', msg);
-      postMessage(id, text, 2)
-        .then(res => {
-          console.log('postedMessage::', res);
-          this.updateMsgs();
-        })
-        .catch(reason => console.log(reason));
-    } else {
-      this.props.actions.addMsg(msg);
-      console.log('posting msg::', msg);
 
-      postMessage(-1, msg.text, 2)
+      if (this.props.chat.editingItem.text !== text) {
+        this.props.actions.editMsg({
+          id: id,
+          text: text,
+          userinfo: {id: 1}
+        });
+
+        console.log('posting msg:', msg);
+        postMessage(id, text, 1)
+          .then(res => {
+            console.log('updated message id:', res);
+            this.updateMsgs();
+          })
+          .catch(reason => console.log(reason));
+      } else {
+        // console.log('Messages identical');
+        this.props.actions.finishEditMsg(this.props.chat.editingItem);
+      }
+    } else {
+      this.props.actions.addMsg({
+        text: msg.text,
+        userinfo: {id: 1}
+      });
+
+      console.log('posting msg:', msg);
+      postMessage(-1, msg.text, 1)
         .then(res => {
-          console.log('postedMessage ::: ', res);
+          console.log('posted message id:', res);
           this.updateMsgs();
         })
         .catch(reason => {
@@ -115,6 +117,7 @@ export class MainSection extends React.Component<MainSection.Props, MainSection.
   render() {
     const {msgs, actions} = this.props;
     // console.log('editingItem MS:::', this.props.chat.editingItem);
+    // console.log('editing mode:::', this.props.chat.editingMode);
 
     return (
       <section className={style.main}>

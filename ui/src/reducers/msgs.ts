@@ -12,7 +12,7 @@ import * as Actions from '../constants/actions';
 const initialMsgStoreStateState: MsgStoreState = [];
 const initialChatStateState: ChatData = {
   editingItem: undefined,
-  editingMode: false
+  loggedInUser: undefined
 };
 
 export const msgsReducer = handleActions<MsgStoreState, any>({
@@ -52,6 +52,6 @@ export const chatReducer = handleActions<ChatData, MsgItemData>({
   },
 
   [Actions.FINISH_EDIT_MSG]: (state, action) => {
-    return {...state, editingItem: undefined, editingMode: false}
+    return {...state, editingItem: undefined}
   },
 }, initialChatStateState);

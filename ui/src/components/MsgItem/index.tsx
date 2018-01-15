@@ -28,7 +28,7 @@ export class MsgItem extends React.Component<MsgItem.Props> {
     // console.log("msg item::: ", msg);
     return (
       <li className={editClasses}>
-        <label className={style.username}>User_id [{msg.userid}]&nbsp;:&nbsp;</label>
+        <label className={style.username}>{msg.userinfo.login}&nbsp;:&nbsp;</label>
         <label className={style.text}>{msg.text}</label>
 
         <a className={style.closebutton} onClick={() => deleteMsg(msg)}>×</a>

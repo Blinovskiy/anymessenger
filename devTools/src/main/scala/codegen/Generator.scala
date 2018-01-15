@@ -13,7 +13,7 @@ object Generator {
       codegen.map(_.writeToFile(
         "slick.jdbc.PostgresProfile",
         args(0),
-        "com.anymessenger.model"
+        "com.anymessenger.dbmodel"
       )),
       5.minutes
     )

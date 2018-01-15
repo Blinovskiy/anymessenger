@@ -7,6 +7,8 @@ import cats.Foldable
 import cats.effect._
 import cats.implicits._
 import com.anymessenger.config.TypesafeConfig
+import com.anymessenger.service.model.request.{RequestMessageEntity, RequestUserEntity}
+import com.anymessenger.service.model.response.{ResponseMessageEntity, ResponseUserEntity}
 //import cats.syntax.foldable._
 
 import fs2.{Stream, StreamApp}
@@ -22,10 +24,9 @@ import io.circe._
 import io.circe.generic.auto._
 import io.circe.syntax._
 
-import com.anymessenger.dbmodel.Tables.{MessageRow, UserRow}
+import com.anymessenger.dbmodel.Tables.{MessageRow, UserinfoRow}
 import com.anymessenger.service.helpers.HelpService._
 import com.anymessenger.service.impl.MainServiceImpl._
-import com.anymessenger.service.model.MessageEntity
 import com.anymessenger.util.defaultTimestampFormat
 import com.anymessenger.util.nowTimestamp
 
@@ -68,17 +69,27 @@ object Http4sServer extends StreamApp[IO] {
   //    }
 
 
-  implicit val messageDecoder: EntityDecoder[IO, MessageRow] = jsonOf[IO, MessageRow]
-  implicit val messageEncoder: EntityEncoder[IO, MessageRow] = jsonEncoderOf[IO, MessageRow]
+  //  implicit val messageDecoder: EntityDecoder[IO, MessageRow] = jsonOf[IO, MessageRow]
+  //  implicit val messageEncoder: EntityEncoder[IO, MessageRow] = jsonEncoderOf[IO, MessageRow]
+  //
+  //  implicit val userDecoder: EntityDecoder[IO, UserinfoRow] = jsonOf[IO, UserinfoRow]
+  //  implicit val userEncoder: EntityEncoder[IO, UserinfoRow] = jsonEncoderOf[IO, UserinfoRow]
 
-  implicit val userDecoder: EntityDecoder[IO, UserRow] = jsonOf[IO, UserRow]
-  implicit val userEncoder: EntityEncoder[IO, UserRow] = jsonEncoderOf[IO, UserRow]
-
-  implicit val messageEntityDecoder: EntityDecoder[IO, MessageEntity] = jsonOf[IO, MessageEntity]
-  //  implicit val messageEntityEncoder: EntityEncoder[IO, MessageEntity] = jsonEncoderOf[IO, MessageEntity]
 
   implicit val mrbdDecoder: EntityDecoder[IO, MessagesRequestByDate] = jsonOf[IO, MessagesRequestByDate]
   //  implicit val mrbdEncoder: EntityEncoder[IO, MessagesRequestByDate] = jsonEncoderOf[IO, MessagesRequestByDate]
+
+  implicit val reqMessageDecoder: EntityDecoder[IO, RequestMessageEntity] = jsonOf[IO, RequestMessageEntity]
+  //  implicit val reqMessageEncoder: EntityEncoder[IO, MessageEntity] = jsonEncoderOf[IO, MessageEntity]
+
+  implicit val respMsgDecoder: EntityDecoder[IO, ResponseMessageEntity] = jsonOf[IO, ResponseMessageEntity]
+  implicit val respMsgEncoder: EntityEncoder[IO, ResponseMessageEntity] = jsonEncoderOf[IO, ResponseMessageEntity]
+
+  implicit val reqUserDecoder: EntityDecoder[IO, RequestUserEntity] = jsonOf[IO, RequestUserEntity]
+  //  implicit val reqUserEncoder: EntityEncoder[IO, RequestUserEntity] = jsonEncoderOf[IO, RequestUserEntity]
+
+  implicit val respUserDecoder: EntityDecoder[IO, ResponseUserEntity] = jsonOf[IO, ResponseUserEntity]
+  implicit val respUserEncoder: EntityEncoder[IO, ResponseUserEntity] = jsonEncoderOf[IO, ResponseUserEntity]
 
   import org.http4s.headers.`Cache-Control`
   import org.http4s.CacheDirective.`no-cache`
@@ -97,7 +108,7 @@ object Http4sServer extends StreamApp[IO] {
   implicit val timestampEncoder: EntityEncoder[IO, Timestamp] = jsonEncoderOf[IO, Timestamp]
   implicit val timestampDecoder: EntityDecoder[IO, Timestamp] = jsonOf[IO, Timestamp]
 
-  val helloWorldService: HttpService[IO] = HttpService[IO] {
+  val testService: HttpService[IO] = HttpService[IO] {
     case GET -> Root / "hello" / name =>
       Ok(s"Hello, $name.", `Cache-Control`(NonEmptyList(`no-cache`(), Nil))).map(_.addCookie(Cookie("foo", "bar"))).map(_.putHeaders(Header("X-Auth-Token", "value")))
     // Ok(s"Hello, $name.", Header("X-Auth-Token", "value"), `Cache-Control`(NonEmptyList(`no-cache`(), Nil))).map(_.addCookie(Cookie("foo", "bar")))
@@ -194,7 +205,7 @@ object Http4sServer extends StreamApp[IO] {
 
     //    case req@POST -> Root / "user" =>
     //      for {
-    //        user <- req.as[UserRow]
+    //        user <- req.as[UserinfoRow]
     //        resp <- Ok(user.asJson)
     //      } yield resp
 
@@ -206,19 +217,13 @@ object Http4sServer extends StreamApp[IO] {
 
     case req@POST -> Root / "user" =>
       for {
-        user <- req.as[UserRow]
+        user <- req.as[RequestUserEntity]
         resp <- f2IO(insertOrUpdateUser(user)).flatMap(wrap(_))
       } yield resp
 
-    //    case req@POST -> Root / "message" =>
-    //      for {
-    //        message <- req.as[MessageRow]
-    //        resp <- wrap(f2IO(insertOrUpdateMessage(message)))(_.isEmpty)
-    //      } yield resp
-
     case req@POST -> Root / "message" =>
       for {
-        message <- req.as[MessageEntity]
+        message <- req.as[RequestMessageEntity]
         resp <- f2IO(insertOrUpdateMessage(message)).flatMap(wrap(_))
       } yield resp
 
@@ -249,7 +254,7 @@ object Http4sServer extends StreamApp[IO] {
       .bindHttp(TypesafeConfig.port, TypesafeConfig.interface)
       .mountService(rootCorsServices, "/")
       .mountService(corsServices, "/api")
-      .mountService(helloWorldService, "/test")
+      .mountService(testService, "/test")
       .serve
   }
 }
