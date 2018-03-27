@@ -24,7 +24,6 @@ import io.circe._
 import io.circe.generic.auto._
 import io.circe.syntax._
 
-import com.anymessenger.dbmodel.Tables.{MessageRow, UserinfoRow}
 import com.anymessenger.service.helpers.HelpService._
 import com.anymessenger.service.impl.MainServiceImpl._
 import com.anymessenger.util.defaultTimestampFormat
@@ -68,14 +67,6 @@ object Http4sServer extends StreamApp[IO] {
   //      json"""{"firstname": ${user.firstname}, "lastname": ${user.lastname}}"""
   //    }
 
-
-  //  implicit val messageDecoder: EntityDecoder[IO, MessageRow] = jsonOf[IO, MessageRow]
-  //  implicit val messageEncoder: EntityEncoder[IO, MessageRow] = jsonEncoderOf[IO, MessageRow]
-  //
-  //  implicit val userDecoder: EntityDecoder[IO, UserinfoRow] = jsonOf[IO, UserinfoRow]
-  //  implicit val userEncoder: EntityEncoder[IO, UserinfoRow] = jsonEncoderOf[IO, UserinfoRow]
-
-
   implicit val mrbdDecoder: EntityDecoder[IO, MessagesRequestByDate] = jsonOf[IO, MessagesRequestByDate]
   //  implicit val mrbdEncoder: EntityEncoder[IO, MessagesRequestByDate] = jsonEncoderOf[IO, MessagesRequestByDate]
 
@@ -111,7 +102,7 @@ object Http4sServer extends StreamApp[IO] {
   val testService: HttpService[IO] = HttpService[IO] {
     case GET -> Root / "hello" / name =>
       Ok(s"Hello, $name.", `Cache-Control`(NonEmptyList(`no-cache`(), Nil))).map(_.addCookie(Cookie("foo", "bar"))).map(_.putHeaders(Header("X-Auth-Token", "value")))
-    // Ok(s"Hello, $name.", Header("X-Auth-Token", "value"), `Cache-Control`(NonEmptyList(`no-cache`(), Nil))).map(_.addCookie(Cookie("foo", "bar")))
+    // Ok(s"Hello, $name.", MenuHeader("X-Auth-Token", "value"), `Cache-Control`(NonEmptyList(`no-cache`(), Nil))).map(_.addCookie(Cookie("foo", "bar")))
 
     case GET -> Root / "test" =>
       Ok(IO {

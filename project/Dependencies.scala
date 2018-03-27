@@ -5,7 +5,7 @@ object Dependencies {
 
   lazy val versions = Map(
     "cats" -> "1.0.0-RC1",
-    "shapeless" -> "2.3.2",
+    "shapeless" -> "2.3.3",
     "slick" -> "3.2.1",
     "circe" -> "0.9.0-M2",
     "finch" -> "0.16.0-M5",

@@ -260,6 +260,9 @@ object MainServiceImpl
         }
     }
       .recover {
+        // SQLIntegrityConstraintViolationException
+        // SQLException
+        // PSQLException
         case NonFatal(e) =>
           _logger.error(e.getMessage)
           Left(e)

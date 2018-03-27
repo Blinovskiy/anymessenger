@@ -3,7 +3,7 @@ import * as MsgActions from '../../actions/msgs';
 import * as style from './style.css';
 import {MsgItem} from '../MsgItem';
 import {MsgTextInput} from "../MsgTextInput";
-import {deleteMessage, getAllMessages, getLastNMessages, postMessage} from "../../api/api";
+import {deleteMessage, getLastNMessages, postMessage} from "../../api/api";
 
 export namespace MainSection {
   export interface Props {

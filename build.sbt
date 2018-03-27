@@ -13,23 +13,20 @@ lazy val root = (project in file("."))
     libraryDependencies ++= commonDeps ++ http4sDeps ++ jdbcDeps ++ testDeps
   )
   .dependsOn(slick_model)
-  .dependsOn(common)
 
-lazy val common = (project in file("common"))
-  .settings(commonSettings)
-  .settings(libraryDependencies ++= commonDeps ++ jdbcDeps ++ testDeps)
+//lazy val common = (project in file("common"))
+//  .settings(commonSettings)
+//  .settings(libraryDependencies ++= commonDeps ++ jdbcDeps ++ testDeps)
 
 lazy val slick_model = (project in file("slick_model"))
   .settings(commonSettings)
   .settings(libraryDependencies ++= commonDeps ++ jdbcDeps)
-  .dependsOn(common)
 
 lazy val devTools = (project in file("devTools"))
   .settings(commonSettings)
   .settings(generate := slickCodeGenTask.value)
   .settings(unmanagedBase := file("lib"))
   .settings(libraryDependencies ++= Seq("com.typesafe.slick" %% "slick-codegen" % "3.2.0") ++ commonDeps ++ jdbcDeps)
-  .dependsOn(common)
 
 
 lazy val revolverSettings = Revolver.settings ++ Seq(
