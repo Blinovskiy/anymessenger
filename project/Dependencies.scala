@@ -20,7 +20,7 @@ object Dependencies {
     "monocle" -> "1.4.0",
     "akka" -> "2.5.6",
     "akka-http" -> "10.0.10",
-    "log4j" -> "2.10.0",
+    "log4j" -> "2.10.0"
   )
   //--------------------------------------------------------------------------------------------------------------------
 
@@ -60,7 +60,7 @@ object Dependencies {
       "com.typesafe.slick" %% "slick-hikaricp" % versions("slick"),
       "io.underscore" %% "slickless" % "0.3.2",
       "org.postgresql" % "postgresql" % "42.1.4",
-      "com.h2database" % "h2" % "1.4.196",
+      "com.h2database" % "h2" % "1.4.196"
     )
 
   val http4sDeps: Seq[ModuleID] =
@@ -68,7 +68,7 @@ object Dependencies {
       "org.http4s" %% "http4s-dsl" % versions("http4sVersion"),
       "org.http4s" %% "http4s-blaze-server" % versions("http4sVersion"),
       "org.http4s" %% "http4s-blaze-client" % versions("http4sVersion"),
-      "org.http4s" %% "http4s-circe" % versions("http4sVersion"),
+      "org.http4s" %% "http4s-circe" % versions("http4sVersion")
     )
   val finagleDeps: Seq[ModuleID] =
     Seq(
@@ -88,7 +88,7 @@ object Dependencies {
       "com.typesafe.akka" %% "akka-http-spray-json" % versions("akka-http"),
 
       // test
-      "com.typesafe.akka" %% "akka-http-testkit" % versions("akka-http") % "test",
+      "com.typesafe.akka" %% "akka-http-testkit" % versions("akka-http") % "test"
 
       // docs
       // "com.github.swagger-akka-http" %% "swagger-akka-http" % "0.11.0"
@@ -121,7 +121,7 @@ object Dependencies {
   val testDeps: Seq[ModuleID] =
     Seq(
       "org.scalactic" %% "scalactic" % versions("test"),
-      "org.scalatest" %% "scalatest" % versions("test") % "test",
+      "org.scalatest" %% "scalatest" % versions("test") % "test"
     )
 
   //------------------------------------------------------------------------------------------------------------

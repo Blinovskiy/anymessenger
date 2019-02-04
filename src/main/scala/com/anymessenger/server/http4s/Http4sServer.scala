@@ -161,11 +161,7 @@ object Http4sServer extends StreamApp[IO] {
 
   def static(fileName: String, request: Request[IO]): IO[Response[IO]] = {
     val file = new File("ui/dist/" + fileName)
-    //    println(s"fileName: $fileName")
-    //    println(s"fileAbsolutePath: ${file.getAbsolutePath}")
-    //    println(s"fileCanonicalPath: ${file.getCanonicalPath}")
     StaticFile.fromFile(file, Some(request)).getOrElseF(NotFound())
-    //    StaticFile.fromResource("/" + file, Some(request)).getOrElseF(NotFound())
   }
 
   val rootService: HttpService[IO] = HttpService[IO] {
